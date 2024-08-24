@@ -2,16 +2,16 @@ package com.restaurante.api.service;
 
 import com.restaurante.api.modelo.Cliente;
 import com.restaurante.api.notificacao.Notificador;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AtivacaoClienteService {
 
+    @Qualifier("email")
+    @Autowired
     private Notificador notificador;
-
-    public AtivacaoClienteService(Notificador notificador) {
-        this.notificador = notificador;
-    }
 
     public void ativar(Cliente cliente) {
         cliente.ativar();
