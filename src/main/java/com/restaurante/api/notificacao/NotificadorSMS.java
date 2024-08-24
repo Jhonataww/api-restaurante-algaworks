@@ -1,10 +1,11 @@
 package com.restaurante.api.notificacao;
 
+import com.restaurante.api.config.TipoDoNotificador;
 import com.restaurante.api.modelo.Cliente;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.restaurante.api.modelo.NivelUrgencia;
 import org.springframework.stereotype.Component;
 
-@Qualifier("sms")
+@TipoDoNotificador(NivelUrgencia.URGENTE)
 @Component
 public class NotificadorSMS implements Notificador {
     @Override
