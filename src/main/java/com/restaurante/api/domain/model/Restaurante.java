@@ -20,6 +20,9 @@ public class Restaurante {
 
     private BigDecimal taxaFrete;
 
+    @ManyToOne
+    private Cozinha cozinha;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

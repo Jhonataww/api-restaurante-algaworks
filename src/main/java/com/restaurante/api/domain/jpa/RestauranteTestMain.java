@@ -21,7 +21,8 @@ public class RestauranteTestMain {
         var restaurantes = restauranteRepository.listar();
 
         for (var restaurante : restaurantes) {
-            System.out.println(restaurante.getNome());
+            System.out.printf("%s - %f - %s\n", restaurante.getNome(),
+                    restaurante.getTaxaFrete(), restaurante.getCozinha().getNome());
         }
 
     }
