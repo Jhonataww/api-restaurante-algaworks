@@ -1,6 +1,7 @@
-package com.restaurante.api.domain.jpa;
+package com.restaurante.api.domain.infrastructure.repository;
 
 import com.restaurante.api.domain.model.Cozinha;
+import com.restaurante.api.domain.repository.CozinhaRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -9,30 +10,32 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
-public class CadastroCozinha {
+@Component  //isso vai virar repositorio
+public class cozinhaRepositoryImpl implements CozinhaRepository {
 
     @PersistenceContext
     private EntityManager manager;
 
-    List<Cozinha> listar (){
+    @Override
+    public List<Cozinha> listar(){
         TypedQuery<Cozinha> query = manager.createQuery("from Cozinha", Cozinha.class); //cria uma consulta pra cozinha
-        return query.getResultList(); //retorna a lista de cozinhas
+        return query.getResultList();
     }
 
     @Transactional
+    @Override
     public Cozinha salvar(Cozinha cozinha){
         return manager.merge(cozinha);
     }
 
+    @Override
     public Cozinha buscar(Long id){
         return manager.find(Cozinha.class, id);
     }
 
     @Transactional
+    @Override
     public void remover(Cozinha cozinha){
-        //se não buscar a cozinha antes de remover, o hibernate vai tentar remover um objeto que não existe no banco pois está no estado transient
-        //ao buscar a cozinha, o hibernate vai colocar a cozinha no estado managed e vai conseguir remover
         cozinha = buscar(cozinha.getId());
         manager.remove(cozinha);
     }
