@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component  //isso vai virar repositorio
-public class cozinhaRepositoryImpl implements CozinhaRepository {
+public class CozinhaRepositoryImpl implements CozinhaRepository {
 
     @PersistenceContext
     private EntityManager manager;
