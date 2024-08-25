@@ -1,20 +1,17 @@
 package com.restaurante.api.domain.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Entity
-@Table(name = "TAB_COZINHAS")
 public class Cozinha {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "NOME_COZINHA", length = 30)
+    @Column
     private String nome;
 
     public Long getId() {

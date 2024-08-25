@@ -1,23 +1,18 @@
 package com.restaurante.api.domain.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "TAB_RESTAURANTES")
 public class Restaurante {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "NOME_RESTAURANTE", length = 30)
     private String nome;
 
-    @Column(name = "TAXA_FRETE")
     private BigDecimal taxaFrete;
 
     public Long getId() {
