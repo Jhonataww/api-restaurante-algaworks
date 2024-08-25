@@ -28,4 +28,12 @@ public class CadastroCozinha {
     public Cozinha buscar(Long id){
         return manager.find(Cozinha.class, id);
     }
+
+    @Transactional
+    public void remover(Cozinha cozinha){
+        //se não buscar a cozinha antes de remover, o hibernate vai tentar remover um objeto que não existe no banco pois está no estado transient
+        //ao buscar a cozinha, o hibernate vai colocar a cozinha no estado managed e vai conseguir remover
+        cozinha = buscar(cozinha.getId());
+        manager.remove(cozinha);
+    }
 }
