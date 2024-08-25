@@ -16,12 +16,14 @@ public class Restaurante {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String nome;
 
+    @Column(name = "taxa_frete", nullable = false) //nullable = false não permite que o campo seja nulo ao criar tabela n vailida nada em java
     private BigDecimal taxaFrete;
 
     @ManyToOne
-    @JoinColumn(name = "cozinha_id") //nome da coluna que vai ser criada na tabela de restaurante
+    @JoinColumn(name = "cozinha_id", nullable = false) //nome da coluna que vai ser criada na tabela de restaurante
     private Cozinha cozinha;
 
     @Override
