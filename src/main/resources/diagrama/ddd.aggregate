@@ -1,0 +1,16 @@
+Agregado é um padrão em Domain-Driven Design. Um agregado DDD é um cluster de objetos de domínio que podem ser tratados
+como uma única unidade. Um exemplo pode ser um pedido e seus itens de linha, estes serão objetos separados, mas é útil
+tratar o pedido (junto com seus itens de linha) como um único agregado.
+
+Um agregado terá um de seus objetos componentes como a raiz agregada. Quaisquer referências de fora do agregado devem ir
+somente para a raiz agregada. A raiz pode, assim, garantir a integridade do agregado como um todo.
+
+Agregados são o elemento básico de transferência de armazenamento de dados - você solicita carregar ou salvar agregados
+inteiros. As transações não devem cruzar os limites dos agregados.
+
+Agregados DDD são às vezes confundidos com classes de coleção (listas, mapas, etc.). Agregados DDD são conceitos de
+domínio (ordem, visita à clínica, lista de reprodução), enquanto coleções são genéricas. Um agregado frequentemente
+conterá coleções múltiplas, junto com campos simples. O termo "agregado" é comum e é usado em vários contextos
+diferentes (por exemplo, UML), caso em que não se refere ao mesmo conceito que um agregado DDD.
+
+Para mais detalhes, consulte o livro Domain-Driven Design .
