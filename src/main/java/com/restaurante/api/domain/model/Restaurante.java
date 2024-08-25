@@ -21,6 +21,7 @@ public class Restaurante {
     private BigDecimal taxaFrete;
 
     @ManyToOne
+    @JoinColumn(name = "cozinha_id") //nome da coluna que vai ser criada na tabela de restaurante
     private Cozinha cozinha;
 
     @Override
