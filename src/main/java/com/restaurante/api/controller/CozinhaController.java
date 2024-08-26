@@ -3,6 +3,7 @@ package com.restaurante.api.controller;
 import com.restaurante.api.domain.model.Cozinha;
 import com.restaurante.api.domain.repository.CozinhaRepository;
 import com.restaurante.api.model.CozinhasXmlWrapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,17 @@ public class CozinhaController {
     @ResponseStatus(HttpStatus.CREATED) //status 201
     public Cozinha adicionar(@RequestBody Cozinha cozinha){
       return cozinhaRepository.salvar(cozinha);
+    }
+
+    @PutMapping("/{cozinhaId}")
+    public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha){
+        var cozinhaAtual = cozinhaRepository.buscar(cozinhaId);
+        if(cozinhaAtual != null){
+            //cozinhaAtual.setNome(cozinha.getNome());
+            BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
+            return ResponseEntity.ok(cozinhaRepository.salvar(cozinhaAtual));
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @ResponseStatus(HttpStatus.OK) //status 201
