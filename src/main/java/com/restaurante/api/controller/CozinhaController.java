@@ -33,6 +33,13 @@ public class CozinhaController {
         return new CozinhasXmlWrapper(cozinhaRepository.listar());
     }
 
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED) //status 201
+    public Cozinha adicionar(@RequestBody Cozinha cozinha){
+      return cozinhaRepository.salvar(cozinha);
+    }
+
     @ResponseStatus(HttpStatus.OK) //status 201
     @GetMapping("/{cozinhaId}") //path variable
     public ResponseEntity<Cozinha> buscar(@PathVariable("cozinhaId") Long id){ //bind com parametro do metodo
