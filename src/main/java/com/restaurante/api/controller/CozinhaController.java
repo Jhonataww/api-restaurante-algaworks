@@ -43,7 +43,11 @@ public class CozinhaController {
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.add(HttpHeaders.LOCATION, "http://localhost:8080/cozinhas");
 //        return ResponseEntity.status(HttpStatus.FOUND).headers(headers).body(cozinha); //retorna 302 com corpo
+        if(cozinha != null){
+            return ResponseEntity.ok(cozinha); //retorna 200 com corpo
+        }
 
-        return ResponseEntity.ok(cozinha); //retorna 200 com corpo - forma simplificada
+        //return ResponseEntity.notFound().build(); //retorna 404 sem corpo
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); //retorna 404 sem corpo
     }
 }
