@@ -10,18 +10,18 @@ import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
 
-@JsonRootName("gastronomia") //nome do elemento raiz
+@JsonRootName("cozinha") //nome do elemento raiz
 @Getter
 @Setter
 @Entity
 public class Cozinha {
 
-    @JsonIgnore //ignora o campo na serialização
+   // @JsonIgnore //ignora o campo na serialização
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonProperty("titulo") //nome do campo na serialização
+   // @JsonProperty("titulo") //nome do campo na serialização
     @Column
     private String nome;
 

@@ -2,6 +2,7 @@ package com.restaurante.api.controller;
 
 import com.restaurante.api.domain.model.Cozinha;
 import com.restaurante.api.domain.repository.CozinhaRepository;
+import com.restaurante.api.model.CozinhasXmlWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +22,15 @@ public class CozinhaController {
     @Autowired
     private CozinhaRepository cozinhaRepository;
 
-    //Especificando o produces para que o método possa retornar tanto JSON quanto XML
-    @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}) //mapeamento do método
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Cozinha> listar(){
        return cozinhaRepository.listar();
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
+    public CozinhasXmlWrapper listarXml(){
+        return new CozinhasXmlWrapper(cozinhaRepository.listar());
     }
 
     @GetMapping("/{cozinhaId}") //path variable
