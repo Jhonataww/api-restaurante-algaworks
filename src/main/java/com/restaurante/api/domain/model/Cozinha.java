@@ -1,5 +1,8 @@
 package com.restaurante.api.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,15 +10,18 @@ import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
 
+@JsonRootName("gastronomia") //nome do elemento raiz
 @Getter
 @Setter
 @Entity
 public class Cozinha {
 
+    @JsonIgnore //ignora o campo na serialização
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonProperty("titulo") //nome do campo na serialização
     @Column
     private String nome;
 
