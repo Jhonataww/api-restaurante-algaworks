@@ -4,8 +4,10 @@ import com.restaurante.api.domain.model.Cozinha;
 import com.restaurante.api.domain.repository.CozinhaRepository;
 import com.restaurante.api.model.CozinhasXmlWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,7 +35,15 @@ public class CozinhaController {
 
     @ResponseStatus(HttpStatus.OK) //status 201
     @GetMapping("/{cozinhaId}") //path variable
-    public Cozinha buscar(@PathVariable("cozinhaId") Long id){ //bind com parametro do metodo
-        return cozinhaRepository.buscar(id);
+    public ResponseEntity<Cozinha> buscar(@PathVariable("cozinhaId") Long id){ //bind com parametro do metodo
+        var cozinha = cozinhaRepository.buscar(id);
+        //return ResponseEntity.status(HttpStatus.OK).build(); //retorna 200 sem corpo
+        //return ResponseEntity.status(HttpStatus.OK).body(cozinha); //retorna 200 com corpo
+
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add(HttpHeaders.LOCATION, "http://localhost:8080/cozinhas");
+//        return ResponseEntity.status(HttpStatus.FOUND).headers(headers).body(cozinha); //retorna 302 com corpo
+
+        return ResponseEntity.ok(cozinha); //retorna 200 com corpo - forma simplificada
     }
 }
