@@ -5,9 +5,11 @@ import com.restaurante.api.domain.repository.EstadoRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
 
 @Component
 public class EstadoRepositoryImpl implements EstadoRepository {
@@ -34,8 +36,13 @@ public class EstadoRepositoryImpl implements EstadoRepository {
 
     @Transactional
     @Override
-    public void remover(Estado estado) {
-        estado = buscar(estado.getId());
+    public void remover(Long id) {
+        Estado estado = buscar(id);
+
+        if (estado == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+
         manager.remove(estado);
     }
 
