@@ -22,6 +22,6 @@ public class ExclusaoCozinhaMain {
         Cozinha cozinha = new Cozinha();
         cozinha.setId(1L);
 
-        cozinhaRepository.remover(cozinha);
+        //cozinhaRepository.remover(cozinha); //quebrou pq mudamos para camada de serviço e não passamos mais a entidade cozinha
     }
 }
