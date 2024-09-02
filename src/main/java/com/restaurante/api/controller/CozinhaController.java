@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 //@Controller //anotação de container spring
 //@ResponseBody  //informa que a resposta do método será o corpo da resposta
@@ -31,14 +32,13 @@ public class CozinhaController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Cozinha> listar(){
-       return cozinhaRepository.listar();
+       return cozinhaRepository.findAll();
     }
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
     public CozinhasXmlWrapper listarXml(){
-        return new CozinhasXmlWrapper(cozinhaRepository.listar());
+        return new CozinhasXmlWrapper(cozinhaRepository.findAll());
     }
-
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) //status 201
@@ -48,11 +48,11 @@ public class CozinhaController {
 
     @PutMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha){
-        var cozinhaAtual = cozinhaRepository.buscar(cozinhaId);
-        if(cozinhaAtual != null){
-            //cozinhaAtual.setNome(cozinha.getNome());
-            BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-            return ResponseEntity.ok(cadastroCozinha.salvar(cozinhaAtual));
+        Optional<Cozinha> cozinhaAtual = cozinhaRepository.findById(cozinhaId);
+
+        if(cozinhaAtual.isPresent()){
+            BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id");
+            return ResponseEntity.ok(cadastroCozinha.salvar(cozinhaAtual.get()));
         }
         return ResponseEntity.notFound().build();
     }
@@ -72,18 +72,8 @@ public class CozinhaController {
     @ResponseStatus(HttpStatus.OK) //status 201
     @GetMapping("/{cozinhaId}") //path variable
     public ResponseEntity<Cozinha> buscar(@PathVariable("cozinhaId") Long id){ //bind com parametro do metodo
-        var cozinha = cozinhaRepository.buscar(id);
-        //return ResponseEntity.status(HttpStatus.OK).build(); //retorna 200 sem corpo
-        //return ResponseEntity.status(HttpStatus.OK).body(cozinha); //retorna 200 com corpo
+        Optional<Cozinha> cozinha = cozinhaRepository.findById(id);
 
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add(HttpHeaders.LOCATION, "http://localhost:8080/cozinhas");
-//        return ResponseEntity.status(HttpStatus.FOUND).headers(headers).body(cozinha); //retorna 302 com corpo
-        if(cozinha != null){
-            return ResponseEntity.ok(cozinha); //retorna 200 com corpo
-        }
-
-        //return ResponseEntity.notFound().build(); //retorna 404 sem corpo
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); //retorna 404 sem corpo
+        return cozinha.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }
