@@ -1,6 +1,7 @@
 package com.restaurante.api.domain.repository;
 
 import com.restaurante.api.domain.model.Restaurante;
+import com.restaurante.api.infrastructure.repository.RestauranteRepositoryQueries;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RestauranteRepository extends JpaRepository<Restaurante, Long> {
+public interface RestauranteRepository extends JpaRepository<Restaurante, Long>, RestauranteRepositoryQueries {
 
     List<Restaurante> findByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);
 
@@ -24,4 +25,7 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
 
     //@Query("from Restaurante where nome like %:nome% and cozinha.id = :id") //query method jpql
     List<Restaurante> consultarPorNome(String nome, Long cozinhaId);
+
+    //Spring sabe que existe uma implementação customizada para esse metodo
+    List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal);
 }
