@@ -2,6 +2,7 @@ package com.restaurante.api.domain.repository;
 
 import com.restaurante.api.domain.model.Restaurante;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -20,4 +21,7 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
     Optional<Restaurante> findTop2ByNomeContaining(String nome);
 
     Integer countByCozinhaId(Long cozinhaId);
+
+    @Query("from Restaurante where nome like %:nome% and cozinha.id = :id") //query method jpql
+    List<Restaurante> consultarPorNome(String nome, Long cozinhaId);
 }
