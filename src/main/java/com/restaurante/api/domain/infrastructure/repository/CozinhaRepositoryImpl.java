@@ -7,11 +7,11 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component  //isso vai virar repositorio
+@Repository  //isso vai virar repositorio
 public class CozinhaRepositoryImpl implements CozinhaRepository {
 
     @PersistenceContext
@@ -41,5 +41,12 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
         if(cozinha == null)
             throw new EmptyResultDataAccessException(1);
         manager.remove(cozinha);
+    }
+
+    @Override
+    public List<Cozinha> consultarPorNome(String nome) {
+        return manager.createQuery("from Cozinha where nome = :nome", Cozinha.class) //jpql
+                .setParameter("nome","%"+nome+"%")
+                .getResultList();
     }
 }
