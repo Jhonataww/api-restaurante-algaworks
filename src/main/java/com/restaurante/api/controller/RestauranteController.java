@@ -30,12 +30,12 @@ public class RestauranteController {
 
     @GetMapping
     public List<Restaurante> listar() {
-        return restauranteRepository.listar();
+        return restauranteRepository.findAll();
     }
 
     @GetMapping("/{restauranteId}")
     public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId) {
-        Restaurante restaurante = restauranteRepository.buscar(restauranteId);
+        Restaurante restaurante = restauranteRepository.findById(restauranteId).orElse(null );
 
         if (restaurante != null) {
             return ResponseEntity.ok(restaurante);
@@ -61,7 +61,7 @@ public class RestauranteController {
     public ResponseEntity<?> atualizar(@PathVariable Long restauranteId,
                                        @RequestBody Restaurante restaurante) {
         try {
-            Restaurante restauranteAtual = restauranteRepository.buscar(restauranteId);
+            Restaurante restauranteAtual = restauranteRepository.findById(restauranteId).orElse(null);
 
             if (restauranteAtual != null) {
                 BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
@@ -80,7 +80,7 @@ public class RestauranteController {
 
     @PatchMapping("/{restaurante}")
     public ResponseEntity<?> atualizarParcial (@PathVariable Long restaurante, @RequestBody Map<String, Object> campos) {
-        Restaurante restauranteAtual = restauranteRepository.buscar(restaurante);
+        Restaurante restauranteAtual = restauranteRepository.findById(restaurante).orElse(null);
 
         if (restauranteAtual == null) {
             return ResponseEntity.notFound().build();
