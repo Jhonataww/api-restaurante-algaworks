@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,12 +32,18 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
         CriteriaQuery<Restaurante> criteria = builder.createQuery(Restaurante.class);
         Root<Restaurante> root = criteria.from(Restaurante.class);
 
+        List<Predicate> predicates = new ArrayList<>();
         //predicateMap: Mapa que armazena os predicados (condições) da consulta.
-        Predicate nomePredicate = builder.like(root.get("nome"), "%" + nome + "%");
-        Predicate taxaInicialPredicate = builder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial);
-        Predicate taxaFinalPredicate = builder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal);
+        if(StringUtils.hasText(nome))
+            predicates.add(builder.like(root.get("nome"), "%" + nome + "%"));
+        if(taxaFreteInicial != null)
+            predicates.add(builder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial));
+        if(taxaFreteFinal != null)
+            predicates.add(builder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal));
+
         //Predicate: Representa uma condição da consulta. 'and' a cada vez que adiciona um predicado.
-        criteria.where(nomePredicate, taxaInicialPredicate, taxaFinalPredicate);
+        criteria.where(predicates.toArray(new Predicate[0]));
+        //toArray(new Predicate[0]): Converte a lista de predicados em um array de predicados.
 
         //TypedQuery: Cria a consulta tipada para a entidade Restaurante.
         TypedQuery<Restaurante> query = manager.createQuery(criteria);
