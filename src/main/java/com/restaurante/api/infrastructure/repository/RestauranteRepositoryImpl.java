@@ -4,6 +4,10 @@ import com.restaurante.api.domain.model.Restaurante;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -12,41 +16,31 @@ import java.util.HashMap;
 import java.util.List;
 
 @Repository
-public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {    //usar Impl no final do nome da classe para indicar que é uma implementação de uma interface
+public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
+    //usar Impl no final do nome da classe para indicar que é uma implementação de uma interface
 
     @PersistenceContext
-    private EntityManager manager;
+    private EntityManager manager; //EntityManager: Interface que gerencia a comunicação entre a aplicação e o banco de dados.
 
     @Override
-    public List<Restaurante> find(String nome,
-                                  BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
+    public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
+        //CriteriaBuilder: Utilizado para construir consultas dinâmicas.
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
 
-        var jpql = new StringBuilder();
-        jpql.append("from Restaurante where 0 = 0 "); //para não precisar de ifs para concatenar o where
+        //CriteriaQuery: Define a consulta a ser criada. No exemplo, criteria.from(Restaurante.class) define que a consulta é sobre a entidade Restaurante.
+        CriteriaQuery<Restaurante> criteria = builder.createQuery(Restaurante.class);
+        Root<Restaurante> root = criteria.from(Restaurante.class);
 
-        var parametros = new HashMap<String, Object>(); //será usado para passar os parâmetros para a query
+        //predicateMap: Mapa que armazena os predicados (condições) da consulta.
+        Predicate nomePredicate = builder.like(root.get("nome"), "%" + nome + "%");
+        Predicate taxaInicialPredicate = builder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial);
+        Predicate taxaFinalPredicate = builder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal);
+        //Predicate: Representa uma condição da consulta. 'and' a cada vez que adiciona um predicado.
+        criteria.where(nomePredicate, taxaInicialPredicate, taxaFinalPredicate);
 
-        if (StringUtils.hasLength(nome)) {
-            jpql.append("and nome like :nome "); //monta a query de acordo com os parâmetros passados
-            parametros.put("nome", "%" + nome + "%");
-        }
-
-        if (taxaFreteInicial != null) {
-            jpql.append("and taxaFrete >= :taxaInicial ");
-            parametros.put("taxaInicial", taxaFreteInicial);
-        }
-
-        if (taxaFreteFinal != null) {
-            jpql.append("and taxaFrete <= :taxaFinal ");
-            parametros.put("taxaFinal", taxaFreteFinal);
-        }
-
-        TypedQuery<Restaurante> query = manager //typedQuery é uma query que retorna um tipo específico
-                .createQuery(jpql.toString(), Restaurante.class);
-
-        parametros.forEach((chave, valor) -> query.setParameter(chave, valor)); //lambda para passar os parâmetros para a query
-
+        //TypedQuery: Cria a consulta tipada para a entidade Restaurante.
+        TypedQuery<Restaurante> query = manager.createQuery(criteria);
         return query.getResultList();
+        //query.getResultList(): Executa a consulta e retorna uma lista de resultados.
     }
-
 }
