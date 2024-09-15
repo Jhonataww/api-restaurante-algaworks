@@ -1,6 +1,8 @@
 package com.restaurante.api.infrastructure.repository;
 
 import com.restaurante.api.domain.model.Restaurante;
+import com.restaurante.api.domain.repository.RestauranteRepository;
+import com.restaurante.api.infrastructure.spec.RestauranteSpecs;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -8,6 +10,8 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -22,6 +26,9 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 
     @PersistenceContext
     private EntityManager manager; //EntityManager: Interface que gerencia a comunicação entre a aplicação e o banco de dados.
+
+    @Autowired @Lazy //Lazy: Indica que a injeção de dependência deve ser feita apenas quando o atributo for utilizado.
+    private RestauranteRepository restauranteRepository; //dependencia teoricamente circular
 
     @Override
     public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
@@ -49,5 +56,10 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
         TypedQuery<Restaurante> query = manager.createQuery(criteria);
         return query.getResultList();
         //query.getResultList(): Executa a consulta e retorna uma lista de resultados.
+    }
+
+    @Override
+    public List<Restaurante> findComFreteGratis(String nome) {
+        return restauranteRepository.findAll(RestauranteSpecs.comFreteGratis().and(RestauranteSpecs.comNomeSemelhante(nome)));
     }
 }
